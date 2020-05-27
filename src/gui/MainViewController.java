@@ -48,6 +48,7 @@ public class MainViewController implements Initializable {
 		
 	}
 	
+
 	// synchronized garante que executa todo o código durante o multitred  
 	private synchronized void loadView (String absoluteName) {
 		try {
