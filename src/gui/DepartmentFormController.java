@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -21,6 +24,8 @@ import model.services.DepartmentService;
 public class DepartmentFormController implements Initializable {
 	
 	private DepartmentService service;
+	
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>(); 
 	
 	// entidade relacionada com este formulário
 	private Department entity;
@@ -45,6 +50,13 @@ public class DepartmentFormController implements Initializable {
 		this.entity=entity;
 	}
 	
+	
+	//  aqui foi alterada a visibilidade
+	void subscribeDataChangeListener(DataChangeListener listener) {
+		
+		dataChangeListeners.add(listener);
+	}
+	
 	public void setDepartmentService(DepartmentService service) {
 		this.service=service;
 	}
@@ -61,6 +73,7 @@ public class DepartmentFormController implements Initializable {
 		//System.out.println("onBtSaveAction");
 		entity = getFormData();
 		service.saveOrUpdate(entity);
+		notifyDataChangeListeners();
 		// pega a referencia da janela actual e em seguida fecha a janela
 		Utils.currentStage(event).close();
 		}
@@ -71,6 +84,13 @@ public class DepartmentFormController implements Initializable {
 		
 	}
 	
+	private void notifyDataChangeListeners() {
+		for (DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChanged();
+		}
+		
+	}
+
 	private Department getFormData() {
 		Department obj = new Department();
 		obj.setId(Utils.tryParseToInt(txtId.getText()));

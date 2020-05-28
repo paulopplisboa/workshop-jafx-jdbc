@@ -10,6 +10,7 @@ import javax.swing.plaf.nimbus.State;
 import application.Main;
 import gui.util.Alerts;
 import gui.util.Utils;
+import gui.listeners.DataChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,7 +29,8 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
 
-public class DepartmentListController implements Initializable {
+
+public class DepartmentListController implements Initializable, DataChangeListener {
 	
 	private DepartmentService service;
 
@@ -94,7 +96,11 @@ public class DepartmentListController implements Initializable {
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
 			controller.setDepartmentService(new DepartmentService());
+			// inscrever-se para receber o evento
+			controller.subscribeDataChangeListener(this);
+			
 			controller.updateFormData();
+			
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter Department data");
@@ -109,6 +115,12 @@ public class DepartmentListController implements Initializable {
 		catch (IOException e) {
 			Alerts.showAlert("IOException", "Erro loading View", e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDataChanged() {
+		updateTableView();
+		
 	}
 
 }
