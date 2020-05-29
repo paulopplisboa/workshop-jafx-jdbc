@@ -1,6 +1,5 @@
 package model.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.DaoFactory;
@@ -29,6 +28,11 @@ public class DepartmentService {
 		else {
 			dao.update(obj);
 		}
+	}
+	
+	//remover um departamento do banco de dados 
+	public void remove(Department obj) {
+		dao.deleteById(obj.getId());
 	}
 
 }
